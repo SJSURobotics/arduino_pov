@@ -124,7 +124,19 @@ void write_letter(char letter)
   
   for (int i = 0; i < character_width; i++)
   {
-    char line = letter_array[i];
-    
+    char line = letter_array[i]; // select line
+    // commit line
+    for ( int j = 0; i < character_height; i++)
+    {
+      pins[j] = line & 0x01;
+      line = line >> 1;
+    }
+    // wait before getting next line
+    delay (time_delay);
   }
+}
+
+void loop()
+{
+  write_letter('a');
 }
