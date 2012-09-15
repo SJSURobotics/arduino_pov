@@ -1,10 +1,8 @@
-char pins[7];
-
-int character_width = 5;
-int character_height = 7;
+const unsigned int character_width = 5;
+const unsigned int character_height = 7;
 
 //time delay in milliseconds
-int time_delay = 50;
+int time_delay = 500;
 
 /*
  * display text using a 5x7 bitmap font in ASCII letters
@@ -107,36 +105,45 @@ static unsigned char font [] [5] = {
         { 0x04,0x02,0x04,0x08,0x04 },   // ~ 0x7e 126
 };
 
+char pins[character_height];
+
 void setup()
 {
   //Set up pins
-  for( pin=6;pin<=13;pin++)
+  for( int i = 0; i < character_height; i++)
   {
-    pins[i-6]=pin;
-    pinMode(pin,OUTPUT);
+    pins[i] = i + 6;
+    pinMode(pins[i],OUTPUT);
   }
 }
 
 void write_letter(char letter)
 {
-  
-  char* letter_array = font[letter];
+  unsigned char* letter_array = font[letter];
   
   for (int i = 0; i < character_width; i++)
   {
-    char line = letter_array[i]; // select line
+    unsigned char line = letter_array[i]; // select line
     // commit line
-    for ( int j = 0; i < character_height; i++)
+    for ( int j = 0; j < character_height; j++)
     {
-      pins[j] = line & 0x01;
+      if(line & 0x01)
+      {
+        digitalWrite(pins[j], HIGH);
+      }
+      else
+      {
+        digitalWrite(pins[j], LOW);
+      }
       line = line >> 1;
     }
     // wait before getting next line
     delay (time_delay);
-  }
+  }*/
 }
 
 void loop()
 {
+
   write_letter('a');
 }
