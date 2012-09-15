@@ -124,6 +124,7 @@ void write_letter(char letter)
   
   for (int i = 0; i < character_width; i++)
   {
+    char line = letter_array[i];
     
   }
 }
