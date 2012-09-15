@@ -2,7 +2,7 @@ const unsigned int character_width = 5;
 const unsigned int character_height = 7;
 
 //time delay in milliseconds
-int time_delay = 500;
+int time_delay = 1;
 
 /*
  * display text using a 5x7 bitmap font in ASCII letters
@@ -117,33 +117,40 @@ void setup()
   }
 }
 
+void write_line(unsigned char line)
+{
+  for ( int j = 0; j < character_height; j++)
+  {
+    if(line & 0x01)
+    {
+      digitalWrite(pins[j], HIGH);
+    }
+    else
+    {
+      digitalWrite(pins[j], LOW);
+    }
+    line = line >> 1;
+  }
+}
+
 void write_letter(char letter)
 {
   unsigned char* letter_array = font[letter];
   
+  write_line(0);
   for (int i = 0; i < character_width; i++)
   {
-    unsigned char line = letter_array[i]; // select line
-    // commit line
-    for ( int j = 0; j < character_height; j++)
-    {
-      if(line & 0x01)
-      {
-        digitalWrite(pins[j], HIGH);
-      }
-      else
-      {
-        digitalWrite(pins[j], LOW);
-      }
-      line = line >> 1;
-    }
-    // wait before getting next line
+    write_line(letter_array[i]);
     delay (time_delay);
-  }*/
+  }
 }
 
 void loop()
 {
-
-  write_letter('a');
+ // for (time_delay = 2; time_delay < 50; time_delay += 2){
+    write_letter('S');
+    write_letter('J');
+    write_letter('S');
+    write_letter('U');
+//  }
 }
