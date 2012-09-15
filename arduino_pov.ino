@@ -1,8 +1,9 @@
 const unsigned int character_width = 5;
 const unsigned int character_height = 7;
+char message[] = "SJSU";
 
 //time delay in milliseconds
-int time_delay = 1;
+int time_delay = 30;
 
 /*
  * display text using a 5x7 bitmap font in ASCII letters
@@ -145,12 +146,17 @@ void write_letter(char letter)
   }
 }
 
+void write_message(char msg[], bool invert_color)
+{
+  for (int i = 0; i < sizeof(msg); i++)
+  {
+    write_letter(msg[i]);
+  }
+}
+
 void loop()
 {
  // for (time_delay = 2; time_delay < 50; time_delay += 2){
-    write_letter('S');
-    write_letter('J');
-    write_letter('S');
-    write_letter('U');
+    write_message(message, false);
 //  }
 }
