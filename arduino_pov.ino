@@ -1,9 +1,11 @@
 const unsigned int character_width = 5;
 const unsigned int character_height = 7;
-char message[] = "SJSU";
+char message[] = "SJSU Robotics Club";
+
+byte dataPin = 2, latchPin = 3, clockPin = 4;
 
 //time delay in milliseconds
-int time_delay = 30;
+int time_delay = 40;
 
 /*
  * display text using a 5x7 bitmap font in ASCII letters
@@ -110,38 +112,34 @@ char pins[character_height];
 
 void setup()
 {
-  //Set up pins
-  for( int i = 0; i < character_height; i++)
-  {
-    pins[i] = i + 6;
-    pinMode(pins[i],OUTPUT);
-  }
+  //Set up pins for the shift register
+  pinMode(dataPin, OUTPUT);
+  pinMode(latchPin, OUTPUT);
+  pinMode(clockPin, OUTPUT);
 }
 
-void write_line(unsigned char line)
+void write_line(unsigned char line, bool invert_color)
 {
-  for ( int j = 0; j < character_height; j++)
+  digitalWrite(latchPin, LOW);
+  if (invert_color)
   {
-    if(line & 0x01)
-    {
-      digitalWrite(pins[j], HIGH);
-    }
-    else
-    {
-      digitalWrite(pins[j], LOW);
-    }
-    line = line >> 1;
+    shiftOut(dataPin, clockPin, MSBFIRST, ~line);
   }
+  else
+  {
+    shiftOut(dataPin, clockPin, MSBFIRST, line);
+  }
+  digitalWrite(latchPin, HIGH);
 }
 
-void write_letter(char letter)
+void write_letter(char letter, bool invert_color)
 {
   unsigned char* letter_array = font[letter];
-  
-  write_line(0);
+ 
+  write_line(0, invert_color);
   for (int i = 0; i < character_width; i++)
   {
-    write_line(letter_array[i]);
+    write_line(letter_array[i], invert_color);
     delay (time_delay);
   }
 }
@@ -150,13 +148,11 @@ void write_message(char msg[], bool invert_color)
 {
   for (int i = 0; i < sizeof(msg); i++)
   {
-    write_letter(msg[i]);
+    write_letter(msg[i], invert_color);
   }
 }
 
 void loop()
 {
- // for (time_delay = 2; time_delay < 50; time_delay += 2){
     write_message(message, false);
-//  }
 }
